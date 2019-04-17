@@ -11,13 +11,22 @@ class GroupedListView<TElement, TGroup> extends StatelessWidget {
   final ListBuilderFunction<TElement> listBuilder;
   final GroupBuilderFunction<TGroup> groupBuilder;
 
+  //Expose ListView properties
+  //TODO: Expose all properties
+  final bool reverse;
+  final ScrollController scrollController;
+  final bool primary;
+
   final List<dynamic> _flattenedList = List();
 
   GroupedListView(
       {@required this.collection,
         @required this.groupBy,
         @required this.listBuilder,
-        @required this.groupBuilder}) {
+        @required this.groupBuilder,
+        this.reverse = false,
+        this.scrollController,
+        this.primary = true}) {
 
     _flattenedList.addAll(Grouper<TElement, TGroup>().groupList(collection, groupBy));
   }
@@ -25,6 +34,9 @@ class GroupedListView<TElement, TGroup> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
+      reverse: reverse,
+      primary: primary,
+      controller: scrollController,
       itemBuilder: (context, index) {
         var element = _flattenedList[index];
         if (element is TElement) {
